@@ -57,7 +57,7 @@ class ServerViewModel(private val repository: ServerDetailsRepository,
                 deleteLast()
                 insert(currentsDetails)
             }
-            val bool = connectToServer()
+            connectToServer()
         }
 
     }
@@ -125,7 +125,36 @@ class ServerViewModel(private val repository: ServerDetailsRepository,
         val gson = GsonBuilder()
             .setLenient()
             .create()
-        connectRetrofit(gson, intent, url, okHttp)
+        //connectRetrofit(gson, intent, url, okHttp)
+        try {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(inputUrlServer.value)
+                .addConverterFactory(GsonConverterFactory.create(gson)).client(okHttp.build())
+                .build()
+            val api = retrofit.create(Api::class.java)
+            val body = api.getImg().enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>
+                ) {
+                    //if the connection succseed
+                    if(response.code()==200){
+                        val c = context
+                        Toast.makeText(c, "Connection ", Toast.LENGTH_SHORT).show()
+                        intent.putExtra("url", url)
+                        c.startActivity(intent)
+                    }
+                    else {
+                        Toast.makeText(context, "failed to connect, try again!",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                }
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Toast.makeText(context, "failed to connect, try again!",
+                        Toast.LENGTH_SHORT).show()
+                }
+            })
+        } catch (e: Exception){
+            Toast.makeText(context, "failed to connect, try again!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun connectRetrofit(gson: Gson, intent: Intent, url: String?, okHttp: OkHttpClient.Builder) {
