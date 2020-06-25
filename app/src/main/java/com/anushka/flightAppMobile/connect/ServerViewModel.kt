@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anushka.flightAppMobile.ControlPanel
-import com.anushka.flightAppMobile.Event
 import com.anushka.flightAppMobile.db.ServerDetails
 import com.anushka.flightAppMobile.db.ServerDetailsRepository
 import com.anushka.flightAppMobile.services.Api
@@ -37,7 +36,6 @@ class ServerViewModel(private val repository: ServerDetailsRepository,
     val servers = repository.servers
     @Bindable
     val inputUrlServer = MutableLiveData<String>()
-    private val statusMessage = MutableLiveData<Event<String>>()
 
 //    val message : LiveData<Event<String>>
 //        get() = statusMessage
