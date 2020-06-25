@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">flightSimulator</string>
+    <string name="textview">TextView</string>
+    <string name="bkas">bkas</string>
+    <string name="login">GO BACK to login</string>
+
+    <string name="post_request">post request</string>
+    <string name="reset">Reset</string>
+    <string name="rudder">Rudder:</string>
+    <string name="elevator">Elevator:</string>
+    <string name="zero">0.0</string>
+
+    <string name="aileron">Aileron:</string>
+    <string name="throttle">Throttle:</string>
+
+</resources>
