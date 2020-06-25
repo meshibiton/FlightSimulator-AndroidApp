@@ -37,10 +37,6 @@ class ServerViewModel(private val repository: ServerDetailsRepository,
     @Bindable
     val inputUrlServer = MutableLiveData<String>()
 
-//    val message : LiveData<Event<String>>
-//        get() = statusMessage
-
-
     fun saveOrUpdate() {
         if(inputUrlServer.value == null || inputUrlServer.value!!.length == 0){
             Toast.makeText(context, "Please enter url server", Toast.LENGTH_SHORT).show()
