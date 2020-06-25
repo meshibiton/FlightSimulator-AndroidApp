@@ -1,6 +1,7 @@
 package com.anushka.flightAppMobile
 
 
+import android.R.attr.name
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -37,6 +38,7 @@ class JoystickView : SurfaceView, SurfaceHolder.Callback, OnTouchListener {
             Math.min(width, height) / 4.2.toFloat() + Math.min(width, height) / 7.toFloat()
         hatRadius = Math.min(width, height) / 7.toFloat()
     }
+
     //constructors for the activity
     constructor(context: Context?) : super(context) {
         holder.addCallback(this)
@@ -95,42 +97,14 @@ class JoystickView : SurfaceView, SurfaceHolder.Callback, OnTouchListener {
             colors.setARGB(255, 100, 100, 100)
             myCanvas.drawCircle(centerX, centerY, baseRadius, colors)
             DrawBaseCircul(colors, myCanvas, newX, newY, cos, sin, hypotenuse)
-//            for (i in 1..(baseRadius / ratio).toInt()) {
-//                colors.setARGB(
-//                    150 / i,
-//                    255,
-//                    0,
-//                    0
-//                ) //Gradually decrease the shade of black drawn to create a nice shading effect
-//                myCanvas.drawCircle(
-//                    newX - cos * hypotenuse * (ratio / baseRadius) * i,
-//                    newY - sin * hypotenuse * (ratio / baseRadius) * i,
-//                    i * (hatRadius * ratio / baseRadius),
-//                    colors
-//                ) //Gradually increase the size of the shading effect
-//            }
-
             //Drawing the joystick hat
             DrawingJoystickHat(colors, myCanvas, newX, newY)
-//            for (i in 0..(hatRadius / ratio).toInt()) {
-//                colors.setARGB(
-//                    255,
-//                    (i * (255 * ratio / hatRadius)).toInt(),
-//                    (i * (255 * ratio / hatRadius)).toInt(),
-//                    255
-//                ) //Change the joystick color for shading purposes
-//                myCanvas.drawCircle(
-//                    newX,
-//                    newY,
-//                    hatRadius - i.toFloat() * ratio / 2,
-//                    colors
-//                ) //Draw the shading for the hat
-//            }
             holder.unlockCanvasAndPost(myCanvas) //Write the new drawing to the SurfaceView
         }
     }
+
     private fun DrawBaseCircul(colors: Paint, myCanvas: Canvas, newX: Float, newY: Float,
-        cos: Float, sin: Float, hypotenuse: Float) {
+                               cos: Float, sin: Float, hypotenuse: Float) {
         for (i in 1..(baseRadius / ratio).toInt()) {
             colors.setARGB(
                 150 / i,
@@ -146,6 +120,7 @@ class JoystickView : SurfaceView, SurfaceHolder.Callback, OnTouchListener {
             ) //Gradually increase the size of the shading effect
         }
     }
+
     private fun DrawingJoystickHat(
         colors: Paint, myCanvas: Canvas, newX: Float, newY: Float) {
         for (i in 0..(hatRadius / ratio).toInt()) {
@@ -163,11 +138,13 @@ class JoystickView : SurfaceView, SurfaceHolder.Callback, OnTouchListener {
             ) //Draw the shading for the hat
         }
     }
+
     //override the surface - create
     override fun surfaceCreated(holder: SurfaceHolder) {
         setupDimensions()
         drawJoystick(centerX, centerY)
     }
+
     //override - changed the surface
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
@@ -176,115 +153,133 @@ class JoystickView : SurfaceView, SurfaceHolder.Callback, OnTouchListener {
         if (v == this) {
             if (e.action != MotionEvent.ACTION_UP) {
                 ifMotionEvent(e)
-//                val displacement = Math.sqrt(
-//                    Math.pow(
-//                        e.x - centerX.toDouble(),
-//                        2.0
-//                    ) + Math.pow(e.y - centerY.toDouble(), 2.0)
-//                ).toFloat()
-//                if (displacement < baseRadius) {
-//                    drawJoystick(e.x, e.y)
-//                    joystickCallback!!.onJoystickMoved(
-//                        (e.x - centerX) / baseRadius,
-//                        (e.y - centerY) / baseRadius,
-//                        id
-//                    )
-//
-//                } else {
-//                    val ratio = baseRadius / displacement
-//                    val constrainedX = centerX + (e.x - centerX) * ratio
-//                    val constrainedY = centerY + (e.y - centerY) * ratio
-//                    drawJoystick(constrainedX, constrainedY)
-//                    joystickCallback!!.onJoystickMoved(
-//                        (constrainedX - centerX) / baseRadius,
-//                        (constrainedY - centerY) / baseRadius,
-//                        id
-//                    )
-//
-//                }
+
             } else {
                 //animation joystick  part
-
-                var oldX: Float = joystickCallback!!.getValusX().toFloat()
-                var oldY: Float = joystickCallback!!.getValusY().toFloat() * -1
-                //check where the hat joystick placed
-                if (oldX > oldY*-1 && oldX> 0&& oldY*-1 > 0 ) {
-                    val x: Float = oldY / oldX
-                    var degree = Math.atan(x.toDouble())
-
-                    while (oldX > 0.01) {
-                        oldX -= 0.1.toFloat()
-                        oldY = (oldX * (Math.tan(degree))).toFloat()
-                        tryLoop(oldX, oldY )
-                    }
-
-                } else if (oldX < oldY*-1 && oldX>0 && oldY*-1 > 0 ) {
-                    val x: Float = oldY / oldX
-                    var degree = Math.atan(x.toDouble())
-
-                    while (oldY < -0.01) {
-
-                        oldY += 0.1.toFloat()
-                        oldX = (oldY / (Math.tan(degree))).toFloat()
-                        tryLoop(oldX, oldY )
-
-                    }
-                } else  if (oldY > 0) {
-                    val x: Float = oldY / oldX
-                    var degree = Math.atan(x.toDouble())
-                    if(oldX*-1> oldY){
-                        while (oldY > 0.01) {
-                            oldX += 0.1.toFloat()
-                            oldY =(oldX * (Math.tan(degree))).toFloat()
-                            tryLoop(oldX, oldY )
-
-                        }
-                    }else {
-                        if(oldX> oldY){
-                            while (oldX > 0.01) {
-                                oldX -= 0.1.toFloat()
-                                oldY =(oldX * (Math.tan(degree))).toFloat()
-                                tryLoop(oldX, oldY)
-
-                            }
-
-                        }else{
-                            while (oldY > 0.01) {
-                                oldY -= 0.1.toFloat()
-                                oldX = (oldY / (Math.tan(degree))).toFloat()
-                                tryLoop(oldX, oldY)
-
-                            }
-                        }
-
-                    }
-                } else if (oldY < 0) {
-                    val x: Float = oldY / oldX
-                    var degree = Math.atan(x.toDouble())
-                    if(oldX< oldY){
-                        while (oldX < -0.01) {
-                            oldX += 0.1.toFloat()
-                            oldY =(oldX * (Math.tan(degree))).toFloat()
-                            tryLoop(oldX, oldY )
-                        }
-                    }else{
-                        while (oldX < -0.01) {
-                            oldY += 0.1.toFloat()
-                            oldX = (oldY / (Math.tan(degree))).toFloat()
-                            tryLoop(oldX, oldY )
-                        }
-                    }
-
-                }
-
-                drawJoystick(centerX, centerY)
-                joystickCallback!!.onJoystickMoved(0f, 0f, id)
+                animationJoystickPart();
             }
-
-
         }
         return true
     }
+
+
+    private fun animationJoystickPart() {
+        var oldX: Float = joystickCallback!!.getValusX().toFloat()
+        var oldY: Float = joystickCallback!!.getValusY().toFloat() * -1
+        val x: Float = oldY / oldX
+        val degree = Math.atan(x.toDouble())
+        //check where the hat joystick placed
+        if (oldX > oldY * -1 && oldX > 0 && oldY * -1 > 0) {
+            if (oldX > 0.01) swichCaseLoopCon1(1, oldX, oldY, degree)
+        } else if (oldX < oldY * -1 && oldX > 0 && oldY * -1 > 0) {
+            if (oldY < -0.01) swichCaseLoopCon1(2, oldX, oldY, degree)
+        } else if (oldY > 0) {
+            if (oldX * -1 > oldY) {
+                if (oldY > 0.01) swichCaseLoopCon1(3, oldX, oldY, degree)
+            } else {
+                if (oldX > oldY) {
+                    ifExcutCon(1,oldX, oldY, degree)
+                } else {
+                    ifExcutCon(2,oldX, oldY, degree)
+
+                }
+            }
+        } else if (oldY < 0) {
+            if (oldX < oldY) {
+                ifExcutCon(3,oldX, oldY, degree)
+            } else {
+                ifExcutCon(4,oldX, oldY, degree)
+            }
+        }
+        drawJoystick(centerX, centerY)
+        joystickCallback!!.onJoystickMoved(0f, 0f, id)
+
+
+
+
+    }
+
+
+
+    //execute the while loop of each condition of the joystick animation move
+    private fun ifExcutCon(conditionNum: Int, oldX1: Float, oldY1: Float, degree1: Double) {
+        var oldX = oldX1;
+        var oldY = oldY1;
+        var degree = degree1;
+        when (conditionNum) {
+            1 ->     {
+                if (oldX > 0.01) swichCaseLoopCon2(4, oldX, oldY, degree)
+            }
+            2 ->{
+                if (oldY > 0.01) swichCaseLoopCon2(5, oldX, oldY, degree)
+
+            }
+            3 -> {
+                if (oldX < -0.01) swichCaseLoopCon2(6, oldX, oldY, degree)
+            }
+            4 -> {
+                if (oldX < -0.01) swichCaseLoopCon2(7, oldX, oldY, degree)
+            }
+        }
+    }
+    //execute the while loop of each condition of the joystick animation move
+    private fun swichCaseLoopCon1(conditionNum: Int, oldX1: Float, oldY1: Float, degree1: Double) {
+        var oldX = oldX1;
+        var oldY = oldY1;
+        var degree = degree1;
+        when (conditionNum) {
+            1 -> while (oldX > 0.01) {
+                oldX -= 0.1.toFloat()
+                oldY = (oldX * (Math.tan(degree))).toFloat()
+                tryLoop(oldX, oldY)
+            }
+            2 -> while (oldY < -0.01) {
+
+                oldY += 0.1.toFloat()
+                oldX = (oldY / (Math.tan(degree))).toFloat()
+                tryLoop(oldX, oldY)
+            }
+            3 ->
+                while (oldY > 0.01) {
+                    oldX += 0.1.toFloat()
+                    oldY = (oldX * (Math.tan(degree))).toFloat()
+                    tryLoop(oldX, oldY)
+                }
+        }
+    }
+
+    //execute the while loop of each condition of the joystick animation move
+    private fun swichCaseLoopCon2(conditionNum: Int, oldX1: Float, oldY1: Float, degree1: Double) {
+        var oldX = oldX1;
+        var oldY = oldY1;
+        var degree = degree1;
+        when (conditionNum) {
+            4 -> while (oldX > 0.01) {
+                oldX -= 0.1.toFloat()
+                oldY = (oldX * (Math.tan(degree))).toFloat()
+                tryLoop(oldX, oldY)
+            }
+            5 ->
+                while (oldY > 0.01) {
+                    oldY -= 0.1.toFloat()
+                    oldX = (oldY / (Math.tan(degree))).toFloat()
+                    tryLoop(oldX, oldY)
+                }
+            6 ->
+                while (oldX < -0.01) {
+                    oldX += 0.1.toFloat()
+                    oldY = (oldX * (Math.tan(degree))).toFloat()
+                    tryLoop(oldX, oldY)
+
+                }
+            7 -> while (oldX < -0.01) {
+                oldY += 0.1.toFloat()
+                oldX = (oldY / (Math.tan(degree))).toFloat()
+                tryLoop(oldX, oldY)
+            }
+        }
+    }
+
 
     private fun ifMotionEvent(e: MotionEvent) {
         val displacement = Math.sqrt(
@@ -316,7 +311,7 @@ class JoystickView : SurfaceView, SurfaceHolder.Callback, OnTouchListener {
 
 
     //check and calculate where  to placed the hat joystick
-    fun tryLoop(oldX: Float, oldY: Float ) {
+    fun tryLoop(oldX: Float, oldY: Float) {
         var realPositionX: Float
         var realPositionY: Float
         try {
