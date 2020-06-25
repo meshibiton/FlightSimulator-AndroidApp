@@ -10,10 +10,7 @@ class ServerViewModelFactory(private val repository: ServerDetailsRepository, pr
     :ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
      if(modelClass.isAssignableFrom(ServerViewModel::class.java)){
-         return ServerViewModel(
-             repository,
-             context
-         ) as T
+         return ServerViewModel(repository, context) as T
      }
         throw IllegalArgumentException("Unknown View Model class")
     }

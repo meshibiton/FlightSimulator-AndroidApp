@@ -9,7 +9,9 @@ import com.anushka.flightAppMobile.R
 import com.anushka.flightAppMobile.databinding.ListItemBinding
 import com.anushka.flightAppMobile.db.ServerDetails
 
-
+/**
+ * This is adapter class for the Recycler table of DB server
+ */
 class MyRecyclerViewAdapter(private val clickListener:(ServerDetails)->Unit)
     : RecyclerView.Adapter<MyViewHolder>()
 {
@@ -30,7 +32,7 @@ class MyRecyclerViewAdapter(private val clickListener:(ServerDetails)->Unit)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
       holder.bind(serverList[position],clickListener)
     }
-
+    //reset the table
     fun setList(servers: List<ServerDetails>) {
         serverList.clear()
         serverList.addAll(servers)
